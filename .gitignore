@@ -1,13 +1,251 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
+#include <iostream>
+#include <string>
+#include <stdlib.h>
+#include <time.h>
+using namespace std;
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
+void display_matrix();
+void comp_move ();
+void man_move ();
+bool check ();
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
+char mas[3][3];
+int player_score = 0, computer_score = 0;
+
+int main()
+{
+	int N;
+
+	cout << "how many games would you like to play? \t";
+	cin >> N;
+
+	do
+	{	
+		for (int i=0; i<3; i++)
+			for(int j=0; j<3; j++)
+				mas[i][j] = '*';	
+	
+		for(;;)
+		{
+			comp_move ();
+			display_matrix();
+			cout << '\n';
+			check ();
+			if (check()) break;
+			man_move ();
+			display_matrix();
+			cout << '\n';
+			check ();
+			if (check()) break;
+		}
+		cout << "player score: " << player_score << '\n';
+		cout << "computer score: " << computer_score << '\n';
+		N--;
+	} while (N);
+	system("pause");
+	return 0;
+}
+
+void display_matrix()
+{
+	for (int i=0; i<3; i++)
+	{ 
+		cout << '\n';
+		for(int j=0; j<3; j++)
+		{
+			cout << mas[i][j] << '\t';
+		}
+	}
+}
+
+void comp_move ()
+{
+	int cell;
+	srand(time(NULL));
+	cell = 1 + rand() % 9;
+	cout << "computer picked cell # " << cell << '\n';
+
+	switch (cell)
+	{
+		case 1:
+			if (mas[0][0] == '*') 
+			{
+				mas[0][0] = 'O';
+			}
+			else comp_move();
+			break;
+		case 2:
+			if (mas[0][1] == '*') 
+			{
+				mas[0][1] = 'O';
+			}
+			else comp_move();
+			break;
+		case 3:
+			if (mas[0][2] == '*') 
+			{
+				mas[0][2] = 'O';
+			}
+			else comp_move();
+			break;
+		case 4:
+			if (mas[1][0] == '*') 
+			{
+				mas[1][0] = 'O';
+			}
+			else comp_move();
+			break;
+		case 5:
+			if (mas[1][1] == '*') 
+			{
+				mas[1][1] = 'O';
+			}
+			else comp_move();
+			break;
+		case 6:
+			if (mas[1][2] == '*') 
+			{
+				mas[1][2] = 'O';
+			}
+			else comp_move();
+			break;
+		case 7:
+			if (mas[2][0] == '*') 
+			{
+				mas[2][0] = 'O';
+			}
+			else comp_move();
+			break;
+		case 8:
+			if (mas[2][1] == '*') 
+			{
+				mas[2][1] = 'O';
+			}
+			else comp_move();
+			break;
+		case 9:
+			if (mas[2][2] == '*') 
+			{
+				mas[2][2] = 'O';
+			}
+			else comp_move();
+			break;
+		default:
+			cout << "error";
+	}
+}
+
+void man_move ()
+{
+	int i,j;
+	bool q = false;
+	do
+	{
+		do
+		{
+			cout << "Enter coordinates of cell \n";
+			cin >> i >> j;
+			if (i >=4 || j >= 4) cout << "pick another cell";
+		} while (i >=4 || j >= 4);
+		
+		
+		if(mas[i-1][j-1] == '*')	
+		{
+			mas[i-1][j-1] = 'X';
+			q = true;
+		}
+		else 
+		{
+			cout << "pick another cell\n";
+			man_move();
+		}
+	} while(!q); 
+}
+
+bool check ()
+{
+	bool win = false;
+
+	for(int i=0; i<3; i++) // check lines
+	{
+		if(mas[i][0]=='O' && mas[i][1]=='O' && mas[i][2]=='O')
+		{
+			win = true;
+			cout << "computer wins\n";
+			computer_score++;
+			goto winner;
+		}
+		else if(mas[i][0]=='X' && mas[i][1]=='X' && mas[i][2]=='X') 
+		{
+			win = true;
+			cout << "player wins\n";
+			player_score++;
+			goto winner;
+		}
+		else win = false;
+	}
+		
+
+	for(int i=0; i<3; i++) // check columns
+	{
+		if(mas[0][i]=='O' && mas[1][i]=='O' && mas[2][i]=='O') 
+		{
+			win = true;
+			cout << "computer wins\n";
+			computer_score++;
+			goto winner;
+		}
+		else 
+		if(mas[i][0]=='X' && mas[i][1]=='X' && mas[i][2]=='X') 
+		{
+			win = true;
+			cout << "player wins\n";
+			player_score++;
+			goto winner;
+		}
+		else win = false;
+	}		
+
+	 // check "/" diagonal
+		if(mas[2][0]=='O' && mas[1][1]=='O' && mas[0][2]=='O') 
+		{
+			win = true;
+			cout << "computer wins\n";
+			computer_score++;
+			goto winner;
+		}
+		else win = false;
+
+	 // check "/" diagonal 
+		if(mas[2][0]=='X' && mas[1][1]=='X' && mas[0][2]=='X') 
+		{
+			win = true;
+			cout << "player wins\n";
+			player_score++;
+			goto winner;
+		}
+		else win = false;
+
+		// check "\" diagonal
+		if(mas[0][0]=='O' && mas[1][1]=='O' && mas[2][2]=='O') 
+		{ 
+			win = true;
+			cout << "computer wins\n";
+			computer_score++;
+			goto winner;
+		}
+		else win = false;
+
+	 // check "\" diagonal 
+		if(mas[0][0]=='X' && mas[1][1]=='X' && mas[2][2]=='X')
+		{
+			win = true;
+			cout << "player wins\n";
+			player_score++;
+			goto winner;
+		}
+		else win = false;
+
+		winner:
+	if(win) return true;
+}
